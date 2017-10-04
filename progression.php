@@ -2,7 +2,7 @@
 
 /**
 
-	Скрипт может определить является ли последовательность символов арифметической или геометрической прогрессией.	
+	Скрипт может определить является ли последовательность символов арифметическо-геометрической прогрессией.	
 */
 
 if (count($argv) < 2) {
@@ -21,41 +21,34 @@ foreach ($strSeq as $symbols) {
 	$seq[] = $symbols + 0;
 }
 
-function isArithmeticProgression( $seq = array() )
+function isProgression( $seq = array() )
 {
 	$seqLength = count($seq);
 	if ($seqLength <= 2) {
 		return true;		
 	}
 
-	$step = $seq[1] - $seq[0];
+	$q = 0;
+	$d = 0;
 
-	for ($i = 1; $i < $seqLength - 1; $i++) {
-		if ($seq[$i+1] - $seq[$i] != $step) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-function isGeometricProgression( $seq = array() )
-{
 	foreach ($seq as $number) {
 		if ($number == 0) {
-			return false;
+			$q = 1;
+			break;
 		}
 	}
 
-	$seqLength = count($seq);
-	if ($seqLength <= 2) {
-		return true;		
+	if ($q == 0) {
+		if ($seq[1] != $seq[0]) {
+			$d = ($seq[1]*$seq[1]-$seq[0]*$seq[2]) / ($seq[1]-$seq[0]);
+			$q = ($seq[1] - $d) / $seq[0];
+		}	
+	} else {
+		$d = $seq[1]-$seq[0];
 	}
 
-	$denominator = $seq[1] / $seq[0];
-
 	for ($i = 1; $i < $seqLength - 1; $i++) {
-		if ($seq[$i+1] / $seq[$i] != $denominator) {
+		if ($seq[$i+1] != $seq[$i] * $q  + $d) {
 			return false;
 		}
 	}
@@ -63,5 +56,4 @@ function isGeometricProgression( $seq = array() )
 	return true;
 }
 
-
-echo isArithmeticProgression($seq) || isGeometricProgression($seq) ? 'YES' : 'NO';
+echo isProgression($seq) ? 'YES' : 'NO';
